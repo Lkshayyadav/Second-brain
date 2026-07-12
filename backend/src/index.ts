@@ -6,12 +6,15 @@ import contentRouter from "./routes/content.routes.js";
 import collectionRouter from "./routes/collection.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
+
 const app = express();
+
 app.use(express.json());
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
 // CORS middleware
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", FRONTEND_URL);
   res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   if (req.method === "OPTIONS") {
