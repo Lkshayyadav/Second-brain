@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL || "*";
 // CORS middleware
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", FRONTEND_URL);
@@ -23,6 +23,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 
 // Routes
 app.use("/api/v1", userRouter);
