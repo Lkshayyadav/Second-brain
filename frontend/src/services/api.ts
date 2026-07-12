@@ -1,7 +1,14 @@
 import axios from "axios";
 
+const rawBase = (import.meta.env.VITE_BACKEND_URL as string) || "http://localhost:3000";
+// Normalize: remove trailing slash, then always append /api/v1 if not already present
+const normalizedBase = rawBase.replace(/\/$/, "");
+const baseURL = normalizedBase.endsWith("/api/v1")
+  ? normalizedBase
+  : `${normalizedBase}/api/v1`;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api/v1",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },

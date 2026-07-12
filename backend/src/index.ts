@@ -7,12 +7,27 @@ import contentRouter from "./routes/content.routes.js";
 import collectionRouter from "./routes/collection.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
-const FRONTEND_URL = process.env.FRONTEND_URL ;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+if (process.env.FRONTEND_URL) {
+  // Strip any trailing slash to prevent mismatch with browser origin
+  allowedOrigins.push(process.env.FRONTEND_URL.replace(/\/$/, ""));
+}
+
 const app = express();
 
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: (origin, callback) => {
+      // Allow server-to-server requests (no origin) and listed origins
+      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} not allowed`));
+      }
+    },
     credentials: true,
   })
 );
