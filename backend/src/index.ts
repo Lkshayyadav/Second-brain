@@ -1,28 +1,23 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import { connectDB } from "./db/connect.js";
 import userRouter from "./routes/user.routes.js";
 import contentRouter from "./routes/content.routes.js";
 import collectionRouter from "./routes/collection.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
-
+const FRONTEND_URL = process.env.FRONTEND_URL ;
 const app = express();
 
-app.use(express.json());
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "*";
-// CORS middleware
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", FRONTEND_URL);
-  res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-    return;
-  }
-  next();
-});
+app.use(express.json());
 
 
 // Routes
